@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI in Genomics — Workshop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<!-- Site Header -->
+<header class="site-header" role="banner">
+  <div class="header-inner">
+    <a href="quick-start.html" class="logo" aria-label="AI in Genomics Workshop Home">
+      <span class="logo-icon" aria-hidden="true">🧬</span>
+      <span>AI in Genomics</span>
+    </a>
+
+    <nav class="nav-desktop" role="navigation" aria-label="Workshop sections">
+      <a href="quick-start.html" class="nav-link" data-step="0">
+        <span class="step-num">0</span>
+        <span>Quick Start</span>
+      </a>
+      <a href="index.html" class="nav-link active" data-step="1">
+        <span class="step-num">1</span>
+        <span>Introduction</span>
+      </a>
+      <a href="ml-fundamentals.html" class="nav-link" data-step="2">
+        <span class="step-num">2</span>
+        <span>ML Fundamentals</span>
+      </a>
+      <a href="applications.html" class="nav-link" data-step="3">
+        <span class="step-num">3</span>
+        <span>Applications</span>
+      </a>
+    </nav>
+
+    <button class="theme-toggle" data-theme-toggle aria-label="Toggle theme" title="Toggle dark/light mode">
+      <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;">
+        <circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+      </svg>
+      <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </button>
+
+    <button class="mobile-menu-btn" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-nav">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Mobile Nav Drawer -->
+  <div class="mobile-nav-overlay" aria-hidden="true"></div>
+  <nav class="mobile-nav" id="mobile-nav" role="navigation" aria-label="Mobile menu">
+    <a href="quick-start.html" class="mobile-nav-link" data-step="0"><span class="step-num">0</span><span>Quick Start: Biology for CS</span></a>
+    <a href="index.html" class="mobile-nav-link active" data-step="1"><span class="step-num">1</span><span>Introduction</span></a>
+    <a href="ml-fundamentals.html" class="mobile-nav-link" data-step="2"><span class="step-num">2</span><span>ML Fundamentals</span></a>
+    <a href="applications.html" class="mobile-nav-link" data-step="3"><span class="step-num">3</span><span>Applications</span></a>
+  </nav>
+</header>
+
+<main class="page-content" role="main">
+  <div class="container">
+    <!-- Hero -->
+    <section class="hero reveal">
+      <div class="hero-content">
+        <div class="hero-badge">🧬 Workshop for Bioinformatics Students with CS Background</div>
+        <h1>AI in Genomics</h1>
+        <p class="subtitle">Bridge your computer science foundation with the biological problems where AI is transforming genomics. Four interactive modules from basics to frontiers.</p>
+
+        <div class="hero-actions">
+          <a href="quick-start.html" class="btn btn-primary">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            Start with Quick Start
+          </a>
+          <a href="#what-we-cover" class="btn btn-secondary">What You'll Learn</a>
+        </div>
+
+        <!-- Progress Indicator -->
+        <div class="progress-indicator" role="navigation" aria-label="Workshop progress">
+          <div class="progress-steps">
+            <div class="progress-step completed" data-step="0">
+              <div class="step-circle">0</div>
+              <span class="step-label">Quick Start</span>
+            </div>
+            <div class="progress-connector completed"></div>
+            <div class="progress-step active" data-step="1">
+              <div class="step-circle">1</div>
+              <span class="step-label">Introduction</span>
+            </div>
+            <div class="progress-connector"></div>
+            <div class="progress-step" data-step="2">
+              <div class="step-circle">2</div>
+              <span class="step-label">ML Fundamentals</span>
+            </div>
+            <div class="progress-connector"></div>
+            <div class="progress-step" data-step="3">
+              <div class="step-circle">3</div>
+              <span class="step-label">Applications</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- What This Workshop Covers -->
+    <section id="what-we-cover" class="section reveal-stagger">
+      <h2 style="text-align:center; margin-bottom:2rem;">What This Workshop Covers</h2>
+      <div class="flashcard-grid" role="list" aria-label="Workshop modules">
+        <article class="flashcard" role="listitem">
+          <div class="flashcard-inner">
+            <div class="flashcard-face flashcard-front">
+              <div class="flashcard-icon">📚</div>
+              <p class="flashcard-term">0. Quick Start</p>
+              <p class="flashcard-definition">Biology crash course for CS students — central dogma, gene structure, file formats, CS↔bio analogies</p>
+              <span class="flashcard-hint">Click to flip</span>
+            </div>
+            <div class="flashcard-face flashcard-back">
+              <p class="flashcard-definition">Start here if you're new to molecular biology. Learn the vocabulary and mental models you'll need for the rest of the workshop.</p>
+            </div>
+          </div>
+        </article>
+        <article class="flashcard" role="listitem">
+          <div class="flashcard-inner">
+            <div class="flashcard-face flashcard-front">
+              <div class="flashcard-icon">🎯</div>
+              <p class="flashcard-term">1. Introduction</p>
+              <p class="flashcard-definition">Why AI + genomics now, the data landscape, key terminology (reads, coverage, variants, embeddings)</p>
+              <span class="flashcard-hint">Click to flip</span>
+            </div>
+            <div class="flashcard-face flashcard-back">
+              <p class="flashcard-definition">Understand the forces driving the field: 100,000× cheaper sequencing, GPU compute, and clinical demand for prediction.</p>
+            </div>
+          </div>
+        </article>
+        <article class="flashcard" role="listitem">
+          <div class="flashcard-inner">
+            <div class="flashcard-face flashcard-front">
+              <div class="flashcard-icon">🧠</div>
+              <p class="flashcard-term">2. ML Fundamentals</p>
+              <p class="flashcard-definition">Sequence representations, CNN/Transformer/SSM architectures, self-supervised pre-training, evaluation pitfalls</p>
+              <span class="flashcard-hint">Click to flip</span>
+            </div>
+            <div class="flashcard-face flashcard-back">
+              <p class="flashcard-definition">Learn which architectures work on DNA/protein sequences, why self-supervision is the key unlock, and how to avoid homology leakage.</p>
+            </div>
+          </div>
+        </article>
+        <article class="flashcard" role="listitem">
+          <div class="flashcard-inner">
+            <div class="flashcard-face flashcard-front">
+              <div class="flashcard-icon">🚀</div>
+              <p class="flashcard-term">3. Applications</p>
+              <p class="flashcard-definition">Variant effect prediction, regulatory genomics, single-cell foundation models, open frontiers</p>
+              <span class="flashcard-hint">Click to flip</span>
+            </div>
+            <div class="flashcard-face flashcard-back">
+              <p class="flashcard-definition">See real models in action: AlphaMissense, Enformer, GeneFormer, scGPT — and the unsolved problems at the frontier.</p>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Why AI + Genomics Now -->
+    <section class="section reveal-stagger">
+      <h2 style="text-align:center; margin-bottom:2rem;">Why AI + Genomics Now?</h2>
+      <div class="pipeline" role="list" aria-label="Three forces driving AI in genomics">
+        <article class="pipeline-step" role="listitem">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h3 class="step-title">Data Explosion</h3>
+            <p class="step-desc">Sequencing cost dropped <strong>~100,000×</strong> since 2001. Public archives (NCBI SRA, ENA) hold <strong>petabases</strong> of sequence — far more than any human can analyze manually.</p>
+          </div>
+          <svg class="step-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </article>
+        <article class="pipeline-step" role="listitem">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h3 class="step-title">Compute + Algorithms</h3>
+            <p class="step-desc">GPUs, Transformers, and self-supervised learning now scale to <strong>billion-sequence datasets</strong>. Models like HyenaDNA handle 1M bp context; ESM-2 learns from 65M protein sequences.</p>
+          </div>
+          <svg class="step-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </article>
+        <article class="pipeline-step" role="listitem">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h3 class="step-title">Clinical Pull</h3>
+            <p class="step-desc">Rare disease diagnosis, cancer precision oncology, and population screening create massive demand for <strong>accurate, fast prediction</strong>. AI is moving from bench to bedside.</p>
+          </div>
+          <svg class="step-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </article>
+      </div>
+      <p style="text-align:center; margin-top:1.5rem; color:var(--fg-muted);">The field moves fast — models from 2022 are already superseded. This workshop emphasizes <strong>principles that outlast specific architectures</strong>.</p>
+    </section>
+
+    <!-- Key Terminology -->
+    <section class="section reveal">
+      <h2 style="text-align:center; margin-bottom:2rem;">Key Terminology Cheat Sheet</h2>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Term</th>
+              <th>Meaning</th>
+              <th>Why It Matters for ML</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>Read</code></td>
+              <td>A short DNA sequence fragment from a sequencer (50–300 bp Illumina, 10k+ bp ONT/PacBio)</td>
+              <td>Raw input tokens; error profiles differ by platform</td>
+            </tr>
+            <tr>
+              <td><code>Coverage</code></td>
+              <td>Average reads per base; 30× = each base seen ~30 times</td>
+              <td>Determines variant calling confidence; noise level</td>
+            </tr>
+            <tr>
+              <td><code>Reference genome</code></td>
+              <td>High-quality assembly used as coordinate system (e.g., GRCh38)</td>
+              <td>Alignment target; defines "normal" vs variant</td>
+            </tr>
+            <tr>
+              <td><code>Variant</code></td>
+              <td>Difference from reference: SNV, indel, CNV, structural variant</td>
+              <td>Prediction targets; most are benign, few pathogenic</td>
+            </tr>
+            <tr>
+              <td><code>Expression (RNA-seq)</code></td>
+              <td>Measuring mRNA abundance per gene</td>
+              <td>Quantifies which genes are active; regression/classification target</td>
+            </tr>
+            <tr>
+              <td><code>Embedding</code></td>
+              <td>Dense vector representing a sequence, k-mer, or gene</td>
+              <td>Learned so similar function → similar vector; transferable</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Socratic Check -->
+    <section class="section reveal">
+      <div class="socratic-question" role="region" aria-label="Socratic question">
+        <span class="socratic-label">Check Your Understanding</span>
+        <p><strong>Why did deep learning take off in genomics around 2015–2017, not earlier?</strong> (Hint: it wasn't just "more data.")</p>
+        <button class="socratic-toggle" aria-expanded="false" aria-controls="socratic-answer-1">Show Answer</button>
+        <div class="socratic-answer" id="socratic-answer-1" role="region" aria-label="Answer">
+          <h4>Answer</h3>
+          <p>Three convergent factors: (1) <strong>CNN architectures</strong> (DanQ, DeepSEA) showed regulatory prediction from raw sequence; (2) <strong>GPU compute</strong> became accessible for sequence-length inputs; (3) <strong>Self-supervised pre-training</strong> (k-mer masking, bidirectional LMs) let models leverage unlabeled data — critical because <em>labeled genomics data is scarce</em>. Data volume alone wasn't sufficient; the algorithmic toolkit to use it was missing.</p>
+          <h4>Common Misconceptions</h4>
+          <ul>
+            <li>"Just more data" — but labeled data is still limiting; self-supervision was the unlock</li>
+            <li>"Just GPUs" — CNNs for sequences existed earlier but didn't generalize without architectural inductive biases (dilated convs, attention)</li>
+            <li>"Transformers arrived then" — Transformers came later (2019+); the 2015–2017 wave was CNN/RNN-based</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Prerequisites -->
+    <section class="section reveal">
+      <div class="card card-warning">
+        <div class="card-header">
+          <div class="card-icon">⚡</div>
+          <h2 class="card-title">Prerequisites</h2>
+        </div>
+        <div class="card-body">
+          <p>You should be comfortable with:</p>
+          <ul style="margin: 1rem 0; padding-left: 1.5rem; color: var(--fg-muted);">
+            <li>Python (NumPy, pandas, PyTorch or TensorFlow basics)</li>
+            <li>Core ML concepts: training/validation/test, overfitting, gradient descent</li>
+            <li>Basic molecular biology: DNA → RNA → protein, what a gene is</li>
+          </ul>
+          <p>No prior genomics coursework required — we define terms as you go.</p>
+          <p><strong>New to biology?</strong> Start with the <a href="quick-start.html">Quick Start</a> tab for a CS-friendly crash course.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer class="site-footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h3 class="footer-title">Workshop</h3>
+        <ul class="footer-links">
+          <li><a href="quick-start.html">0. Quick Start</a></li>
+          <li><a href="index.html">1. Introduction</a></li>
+          <li><a href="ml-fundamentals.html">2. ML Fundamentals</a></li>
+          <li><a href="applications.html">3. Applications</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="footer-title">Resources</h3>
+        <ul class="footer-links">
+          <li><a href="https://github.com/hira-14/nvidia-workshop" target="_blank" rel="noopener">GitHub Repository</a></li>
+          <li><a href="https://docs.openclaw.ai" target="_blank" rel="noopener">OpenClaw Docs</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>Built with OpenClaw • <a href="https://hira-14.github.io/nvidia-workshop/" target="_blank" rel="noopener">Permanent GitHub Pages URL</a></p>
+    </div>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+<script src="socratic.js" defer></script>
+<script>
+  // Answer key for Socratic tutor (matches inline question above)
+  window.SOCRATIC_KEY = {
+    "brief": "First-year bioinformatics students with CS background. Stress: compute + algorithmic advances (CNNs, then transformers) + self-supervision, not just data volume.",
+    "questions": {
+      "why-ai-genomics": {
+        "question": "Why did deep learning take off in genomics around 2015–2017, not earlier?",
+        "answer": "Three convergent factors: (1) CNN architectures (DanQ, DeepSEA) showed regulatory prediction from raw sequence; (2) GPU compute became accessible for sequence-length inputs; (3) self-supervised pre-training (k-mer masking, bidirectional LMs) let models leverage unlabeled data — critical because labeled genomics data is scarce. Data volume alone wasn't sufficient; the algorithmic toolkit to use it was missing.",
+        "misconceptions": [
+          "Just more data — but labeled data is still limiting; self-supervision was the unlock",
+          "Just GPUs — CNNs for sequences existed earlier but didn't generalize without architectural inductive biases (dilated convs, attention)",
+          "Transformers arrived later (2019+); the 2015–2017 wave was CNN/RNN-based"
+        ]
+      }
+    }
+  };
+</script>
+</body>
+</html>

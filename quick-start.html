@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quick Start: Biology for CS Students — AI in Genomics</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: system-ui, -apple-system, sans-serif; line-height: 1.6; max-width: 900px; margin: 0 auto; padding: 2rem 1rem; color: #1a1a1a; }
+  h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+  .subtitle { font-size: 1.25rem; color: #444; margin-bottom: 2rem; }
+  nav { display: flex; gap: 1rem; margin: 2rem 0; flex-wrap: wrap; }
+  nav a { display: inline-block; padding: 0.75rem 1.5rem; background: #2563eb; color: white; text-decoration: none; border-radius: 6px; font-weight: 500; }
+  nav a:hover { background: #1d4ed8; }
+  nav a.current { background: #1e3a8a; }
+  .card { border: 1px solid #e5e7eb; border-radius: 8px; padding: 1.5rem; margin: 1rem 0; background: #fafafa; }
+  .card h2 { margin-top: 0; font-size: 1.25rem; }
+  .analogy { background: #f0fdf4; border-color: #bbf7d0; }
+  .analogy h2 { color: #166534; }
+  .warning { background: #fef2f2; border-color: #fecaca; }
+  .warning h2 { color: #991b1b; }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid #e5e7eb; color: #6b7280; font-size: 0.875rem; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { padding: 0.5rem; text-align: left; border-bottom: 1px solid #e5e7eb; }
+  th { background: #f9fafb; }
+  .concept { font-family: monospace; background: #f3f4f6; padding: 0.2rem 0.4rem; border-radius: 4px; }
+</style>
+</head>
+<body>
+<h1>Quick Start: Biology for CS Students</h1>
+<p class="subtitle">The minimal molecular biology you need before diving into AI for genomics — in CS terms</p>
+
+<nav>
+  <a href="quick-start.html" class="current">0. Quick Start</a>
+  <a href="index.html">1. Introduction</a>
+  <a href="ml-fundamentals.html">2. ML Fundamentals</a>
+  <a href="applications.html">3. Applications</a>
+</nav>
+
+<div class="card analogy">
+  <h2>The CS ↔ Biology translation layer</h2>
+  <table>
+    <thead>
+      <tr><th>CS Concept</th><th>Biology Equivalent</th><th>Key Difference</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Bit (0/1)</td><td>Nucleotide (A/C/G/T)</td><td>4-ary, not binary; chemical properties matter</td></tr>
+      <tr><td>String/array</td><td>DNA sequence</td><td>Has 3D structure; not just linear info</td></tr>
+      <tr><td>Source code</td><td>Genome (DNA)</td><td>No comments; mostly non-coding; "compiled" by cellular machinery</td></tr>
+      <tr><td>Compiled binary</td><td>Protein</td><td>3D folded structure = function; not executable code</td></tr>
+      <tr><td>Runtime config / env vars</td><td>Gene expression (RNA levels)</td><td>Dynamic, cell-type specific, responds to environment</td></tr>
+      <tr><td>Library / module</td><td>Gene / pathway</td><td>Fuzzy boundaries; alternative splicing = multiple versions</td></tr>
+      <tr><td>Version control (git)</td><td>Evolution / phylogeny</td><td>No central repo; horizontal transfer; no merge strategy</td></tr>
+      <tr><td>Mutation (bit flip)</td><td>Genetic variant (SNV, indel)</td><td>Most neutral; some break function; rare ones improve fitness</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="card">
+  <h2>Central Dogma: The "Compile Pipeline"</h2>
+  <p>Information flows one way (mostly): <strong>DNA → RNA → Protein</strong></p>
+  <div style="font-family: monospace; white-space: pre; background: #f3f4f6; padding: 1rem; border-radius: 6px; overflow-x: auto; font-size: 0.9rem;">
+DNA (genome)          →  Transcription  →  pre-mRNA  →  Splicing  →  mature mRNA  →  Translation  →  Protein
+[Reference FASTA]          (RNA pol II)       (introns +          (remove          (exons only)      (ribosome)        (folded 3D)
+ 3B bp human              nucleus            exons)               introns)
+        │                                                                       │
+        │                                                                       │
+   "Source code"                                                              "Executable"
+   (static, same in                                                       (dynamic, cell-type
+    every cell*)                                                             specific, regulated)
+  </div>
+  <p><small>*Mostly true — immune cells rearrange DNA; somatic mutations accumulate.</small></p>
+</div>
+
+<div class="card">
+  <h2>DNA → Protein: The genetic code (lookup table)</h2>
+  <p>Every 3 nucleotides (<span class="concept">codon</span>) = 1 amino acid. 64 codons → 20 amino acids + STOP. Redundant (degenerate).</p>
+  <table>
+    <thead>
+      <tr><th>Codon</th><th>Amino Acid</th><th>Codon</th><th>Amino Acid</th><th>Codon</th><th>Amino Acid</th><th>Codon</th><th>Amino Acid</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>TTT, TTC</td><td>Phe (F)</td><td>TCT, TCC, TCA, TCG</td><td>Ser (S)</td><td>TAT, TAC</td><td>Tyr (Y)</td><td>TGT, TGC</td><td>Cys (C)</td></tr>
+      <tr><td>TTA, TTG</td><td>Leu (L)</td><td>CCT, CCC, CCA, CCG</td><td>Pro (P)</td><td>TAA, TAG</td><td>STOP</td><td>TGA</td><td>STOP</td></tr>
+      <tr><td>CTT, CTC, CTA, CTG</td><td>Leu (L)</td><td>ACT, ACC, ACA, ACG</td><td>Thr (T)</td><td>AAT, AAC</td><td>Asn (N)</td><td>AGT, AGC</td><td>Ser (S)</td></tr>
+      <tr><td>ATT, ATC, ATA</td><td>Ile (I)</td><td>GCT, GCC, GCA, GCG</td><td>Ala (A)</td><td>AAA, AAG</td><td>Lys (K)</td><td>AGA, AGG</td><td>Arg (R)</td></tr>
+      <tr><td>ATG</td><td>Met (M), START</td><td>GTT, GTC, GTA, GTG</td><td>Val (V)</td><td>GAT, GAC</td><td>Asp (D)</td><td>GGT, GGC, GGA, GGG</td><td>Gly (G)</td></tr>
+    </tbody>
+  </table>
+  <p><strong>Frame matters:</strong> Shift by 1 or 2 bases → completely different protein (frameshift). Start codon (ATG) sets the reading frame.</p>
+</div>
+
+<div class="card">
+  <h2>Gene structure: Not a clean function definition</h2>
+  <div style="font-family: monospace; white-space: pre; background: #f3f4f6; padding: 1rem; border-radius: 6px; overflow-x: auto; font-size: 0.85rem;">
+Genomic DNA (pre-mRNA):
+[Promoter]---[Exon1]---[Intron1]---[Exon2]---[Intron2]---[Exon3]---[PolyA signal]
+              │            │            │            │            │
+              ▼            ▼            ▼            ▼            ▼
+         Transcription  Splicing    Splicing    Splicing   Cleavage + polyA
+              │            │            │            │            │
+              ▼            ▼            ▼            ▼            ▼
+Mature mRNA:            [Exon1]===========[Exon2]===========[Exon3]---[poly-A tail]
+                         │                 │                 │
+                         ▼                 ▼                 ▼
+                    Translation      Translation       Translation
+                    (5' UTR)         (CDS)             (3' UTR)
+  </div>
+  <ul>
+    <li><strong>Promoter:</strong> Upstream region where RNA polymerase binds (like a function decorator / entry point)</li>
+    <li><strong>Exons:</strong> Coding sequences that remain in mature mRNA</li>
+    <li><strong>Introns:</strong> Non-coding, spliced out (can be huge: 100s of kb)</li>
+    <li><strong>UTR (Untranslated Regions):</strong> 5' UTR (regulatory, ribosome binding), 3' UTR (stability, localization)</li>
+    <li><strong>Alternative splicing:</strong> Same gene → multiple protein isoforms (like polymorphic functions)</li>
+  </ul>
+</div>
+
+<div class="card warning">
+  <h2>Concepts that break CS intuitions</h2>
+  <table>
+    <thead>
+      <tr><th>Intuition</th><th>Reality</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>"One gene = one protein"</td><td>Human: ~20k genes → ~100k+ proteins (alt splicing, PTMs)</td></tr>
+      <tr><td>"DNA is the program"</td><td>Epigenetics (methylation, histones) controls access; identical DNA → different cell types</td></tr>
+      <tr><td>"Sequence determines structure"</td><td>Protein folding is physics; chaperones assist; misfolding = disease</td></tr>
+      <tr><td>"Mutation = bug"</td><td>Most variants neutral; evolution needs variation; "bugs" can be features</td></tr>
+      <tr><td>"Reference genome = truth"</td><td>Reference is one haplotype; you have two (diploid); population has millions of variants</td></tr>
+      <tr><td>"Gene = contiguous interval"</td><td>Genes overlap, nest, read opposite strands; regulatory elements act at distance (enhancers)</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="card">
+  <h2>Key assays: How we get data (the "inputs" to ML)</h2>
+  <table>
+    <thead>
+      <tr><th>Assay</th><th>Measures</th><th>Output format</th><th>ML task</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>DNA-seq (WGS)</strong></td><td>Genomic DNA sequence</td><td>FASTQ (reads) → BAM (aligned) → VCF (variants)</td><td>Variant calling, assembly</td></tr>
+      <tr><td><strong>RNA-seq</strong></td><td>Gene expression (mRNA abundance)</td><td>Count matrix: genes × samples</td><td>Differential expression, cell typing</td></tr>
+      <tr><td><strong>scRNA-seq</strong></td><td>Expression per single cell</td><td>Sparse matrix: genes × cells (10k–1M cells)</td><td>Clustering, trajectory, perturbation</td></tr>
+      <tr><td><strong>ATAC-seq</strong></td><td>Chromatin accessibility (open DNA)</td><td>Peaks (BED) / signal tracks (bigWig)</td><td>Regulatory element prediction</td></tr>
+      <tr><td><strong>ChIP-seq / CUT&Tag</strong></td><td>TF binding / histone marks</td><td>Peaks / signal tracks</td><td>TF binding prediction</td></tr>
+      <tr><td><strong>Hi-C</strong></td><td>3D genome contacts</td><td>Contact matrix (sparse, symmetric)</td><td>Loop prediction, structure</td></tr>
+      <tr><td><strong>Proteomics (MS)</strong></td><td>Protein abundance</td><td>Peptide intensities</td><td>Protein quantification</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="card">
+  <h2>File formats you'll encounter</h2>
+  <table>
+    <thead>
+      <tr><th>Format</th><th>Purpose</th><th>Structure</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>FASTA</code></td><td>Reference sequences</td><td><code>&gt;chr1\nACGT...</code></td></tr>
+      <tr><td><code>FASTQ</code></td><td>Raw reads + quality scores</td><td>4 lines/read: @id, seq, +, qual</td></tr>
+      <tr><td><code>BAM/CRAM</code></td><td>Aligned reads (binary)</td><td>Coordinate-sorted, indexed</td></tr>
+      <tr><td><code>VCF</code></td><td>Variants (SNVs, indels)</td><td>CHROM, POS, ID, REF, ALT, QUAL, FILTER, INFO, FORMAT, samples...</td></tr>
+      <tr><td><code>GTF/GFF</code></td><td>Gene annotations</td><td>Tab-separated: seqid, source, type, start, end, score, strand, phase, attributes</td></tr>
+      <tr><td><code>BED</code></td><td>Genomic intervals</td><td>chrom, start, end, name, score, strand (0-based, half-open)</td></tr>
+      <tr><td><code>bigWig</code></td><td>Signal tracks (continuous)</td><td>Compressed, random-access</td></tr>
+      <tr><td><code>AnnData (.h5ad)</code></td><td>Single-cell data</td><td>X (matrix), obs (cells), var (genes), obsm/varm/layers</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="card">
+  <h2>Minimal vocabulary for the other pages</h2>
+  <table>
+    <thead>
+      <tr><th>Term</th><th>One-liner</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Allele</strong></td><td>One version of a variant (you have two per locus, one per chromosome)</td></tr>
+      <tr><td><strong>Cis / Trans</strong></td><td>Cis = same chromosome; Trans = different chromosome or diffusible factor</td></tr>
+      <tr><td><strong>Coding vs Non-coding</strong></td><td>Coding = translated to protein (~1.5% of genome); Non-coding = regulatory, structural, RNA genes</td></tr>
+      <tr><td><strong>Conservation</strong></td><td>Sequence similarity across species = functional constraint</td></tr>
+      <tr><td><strong>Enhancer</strong></td><td>Non-coding DNA that boosts transcription; can be 1Mb away; works in orientation-independent way</td></tr>
+      <tr><td><strong>Haplotype</strong></td><td>Set of alleles on one chromosome (phase matters!)</td></tr>
+      <tr><td><strong>Ortholog / Paralog</strong></td><td>Ortholog = same gene in different species; Paralog = gene duplicate within genome</td></tr>
+      <tr><td><strong>Phenotype</strong></td><td>Observable trait (disease, height, expression level)</td></tr>
+      <tr><td><strong>Promoter</strong></td><td>Region upstream of TSS where transcription initiates</td></tr>
+      <tr><td><strong>TSS / TES</strong></td><td>Transcription Start / End Site</td></tr>
+      <tr><td><strong>Variant types</strong></td><td>SNV (single base), indel (insertion/deletion), CNV (copy number), SV (structural: inversion, translocation)</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="card analogy">
+  <h2>One mental model to rule them all</h2>
+  <p>Think of a cell as a <strong>massively parallel, stochastic, self-modifying distributed system</strong>:</p>
+  <ul>
+    <li><strong>Genome</strong> = source repo (but every cell has a copy)</li>
+    <li><strong>Epigenetics</strong> = runtime config / feature flags (different per cell type)</li>
+    <li><strong>Transcription</strong> = compilation (on-demand, regulated)</li>
+    <li><strong>Splicing</strong> = link-time optimization (alternative isoforms)</li>
+    <li><strong>Translation</strong> = execution (ribosomes = workers)</li>
+    <li><strong>Protein folding</strong> = JIT optimization (physics-based, chaperone-assisted)</li>
+    <li><strong>Protein function</strong> = API calls (binding, catalysis, signaling, structure)</li>
+    <li><strong>Signaling</strong> = message passing between cells</li>
+    <li><strong>Mutation</strong> = random bit flip in source (mostly caught by QC; some deploy to prod)</li>
+    <li><strong>Evolution</strong> = continuous integration over billions of years (no rollback)</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h2>Socratic check: question 0</h2>
+  <div class="socratic" data-question="why-not-just-sequence">
+    <p><strong>If DNA is the "source code," why can't we just read the genome sequence and predict everything about an organism? What's missing?</strong></p>
+  </div>
+</div>
+
+<script src="socratic.js" defer></script>
+<script>
+  window.SOCRATIC_KEY = ***
+    "brief": "CS students with zero biology. Stress: genome is static but expression is dynamic; epigenetics, environment, 3D structure, stochasticity, non-linear interactions.",
+    "questions": {
+      "why-not-just-sequence": {
+        "question": "If DNA is the 'source code,' why can't we just read the genome sequence and predict everything about an organism? What's missing?",
+        "answer": "The genome is necessary but not sufficient. Missing layers: (1) Epigenetics — methylation, histone marks, chromatin accessibility determine which parts of the 'code' are readable in each cell type. (2) 3D genome architecture — enhancers loop to promoters across megabases; linear sequence doesn't capture this. (3) Environment — nutrients, temperature, pathogens, drugs change expression dynamically. (4) Stochasticity — gene expression is noisy (bursting); identical cells diverge. (5) Non-linear interactions — epistasis (gene×gene), G×E (gene×environment); phenotype ≠ sum of variant effects. (6) Post-translational modifications — proteins are modified after translation (phosphorylation, ubiquitination) altering function. The genome is the parts list + some wiring; the living system is the running program in a changing environment.",
+        "misconceptions": [
+          "Genetic determinism — genome ≠ destiny; identical twins diverge",
+          "Linear readout — 3D structure and epigenetics matter as much as sequence",
+          "Static view — expression changes by second; development is a trajectory"
+        ]
+      }
+    }
+  };
+</script>
+
+<footer>
+  <p><a href="index.html">Next: Introduction →</a></p>
+</footer>
+</body>
+</html>

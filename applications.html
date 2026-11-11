@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Applications — AI in Genomics</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: system-ui, -apple-system, sans-serif; line-height: 1.6; max-width: 900px; margin: 0 auto; padding: 2rem 1rem; color: #1a1a1a; }
+  h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+  .subtitle { font-size: 1.25rem; color: #444; margin-bottom: 2rem; }
+  nav { display: flex; gap: 1rem; margin: 2rem 0; flex-wrap: wrap; }
+  nav a { display: inline-block; padding: 0.75rem 1.5rem; background: #2563eb; color: white; text-decoration: none; border-radius: 6px; font-weight: 500; }
+  nav a:hover { background: #1d4ed8; }
+  nav a.current { background: #1e3a8a; }
+  .card { border: 1px solid #e5e7eb; border-radius: 8px; padding: 1.5rem; margin: 1rem 0; background: #fafafa; }
+  .card h2 { margin-top: 0; font-size: 1.25rem; }
+  .app-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin: 1rem 0; }
+  .app-card { border: 1px solid #e5e7eb; border-radius: 8px; padding: 1rem; background: white; }
+  .app-card h3 { margin-top: 0; font-size: 1.1rem; color: #1e40af; }
+  .app-card .tag { display: inline-block; font-size: 0.75rem; padding: 0.2rem 0.5rem; border-radius: 4px; background: #e0e7ff; color: #3730a3; margin-right: 0.5rem; margin-bottom: 0.25rem; }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid #e5e7eb; color: #6b7280; font-size: 0.875rem; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { padding: 0.5rem; text-align: left; border-bottom: 1px solid #e5e7eb; }
+  th { background: #f9fafb; }
+</style>
+</head>
+<body>
+<h1>Applications of AI in Genomics</h1>
+<p class="subtitle">Where models meet biology: variant interpretation, expression, structure, and frontiers</p>
+
+<nav>
+  <a href="quick-start.html">0. Quick Start</a>
+  <a href="index.html">1. Introduction</a>
+  <a href="ml-fundamentals.html">2. ML Fundamentals</a>
+  <a href="applications.html" class="current">3. Applications</a>
+</nav>
+
+<div class="card">
+  <h2>Application landscape</h2>
+  <div class="app-grid">
+    <div class="app-card">
+      <h3>Variant effect prediction</h3>
+      <span class="tag">Supervised</span>
+      <span class="tag">Clinical</span>
+      <p>Predict pathogenicity of SNVs/indels: AlphaMissense, PrimateAI-3D, EVE. Input: sequence + conservation + structure. Output: probability pathogenic.</p>
+    </div>
+    <div class="app-card">
+      <h3>Regulatory genomics</h3>
+      <span class="tag">Supervised</span>
+      <span class="tag">Sequence → function</span>
+      <p>Predict chromatin accessibility, TF binding, histone marks, enhancer activity from DNA sequence: Enformer, BPNet, Sei. Input: 200k bp → 5k tracks.</p>
+    </div>
+    <div class="app-card">
+      <h3>Gene expression & splicing</h3>
+      <span class="tag">Supervised</span>
+      <span class="tag">Multi-omics</span>
+      <p>RNA-seq quantification (Salmon, kallisto), splicing prediction (SpliceAI), single-cell annotation (scVI, scBERT, GeneFormer).</p>
+    </div>
+    <div class="app-card">
+      <h3>Protein structure & design</h3>
+      <span class="tag">Self-supervised</span>
+      <span class="tag">Structure</span>
+      <p>AlphaFold2/3, ESMFold, RoseTTAFold. MSA + pair representation → 3D coordinates. Inverse folding (ProteinMPNN) for design.</p>
+    </div>
+    <div class="app-card">
+      <h3>Genome assembly & polishing</h3>
+      <span class="tag">Self-supervised</span>
+      <span class="tag">Long reads</span>
+      <p>Basecalling (Bonito, Dorado), assembly (hifiasm, Flye), polishing (DeepPolisher), scaffolding (YaHS). Raw signal → consensus.</p>
+    </div>
+    <div class="app-card">
+      <h3>Population & evolutionary genomics</h3>
+      <span class="tag">Unsupervised</span>
+      <span class="tag">Population</span>
+      <p>Demographic inference (fastsimcoal, MSMC), selection scans (SweepFinder, diploSHIC), ancestry (PCA, ADMIXTURE, neural net versions).</p>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Deep dive: Variant effect prediction</h2>
+  <p>Clinical genetics' hardest problem: given a variant (e.g., BRCA1 c.68_69delAG), is it pathogenic? Three paradigm shifts:</p>
+  <table>
+    <thead>
+      <tr><th>Era</th><th>Approach</th><th>Limitation</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>2010–2015</td><td>Conservation scores (PhyloP, GERP), SIFT, PolyPhen-2</td><td>Heuristic; miss gain-of-function; poor on non-coding</td></tr>
+      <tr><td>2016–2021</td><td>Supervised on ClinVar: CNNs/Transformers (PrimAI, CADD)</td><td>Labels noisy; circularity (ClinVar uses same predictors); limited non-coding</td></tr>
+      <tr><td>2022+</td><td>Unsupervised / evolutionary: EVE, AlphaMissense, ESM1v</td><td>No labels needed; learns from MSA / protein LM; generalizes to unseen variants</td></tr>
+    </tbody>
+  </table>
+  <p><strong>Key insight:</strong> Protein language models (ESM, ProGen) trained on millions of sequences learn evolutionary constraints implicitly. Masked prediction likelihood = fitness proxy. AlphaMissense adds structural context from AlphaFold.</p>
+</div>
+
+<div class="card">
+  <h2>Deep dive: Regulatory prediction (Enformer architecture)</h2>
+  <p>Predict 5,313 epigenetic tracks (CAGE, ATAC, ChIP-seq, RNA-seq) from 196,608 bp DNA sequence.</p>
+  <div style="font-family: monospace; white-space: pre; background: #f3f4f6; padding: 1rem; border-radius: 6px; overflow-x: auto; font-size: 0.8rem;">
+Input: 196,608 bp → one-hot [196608, 4]
+       ↓ Stem: 7× ConvBlock (pool 2×) → [1536, 1536]
+       ↓ 11× Transformer (8 heads, dim 1536) → [1536, 1536]
+       ↓ Crop center 896 bp → [896, 1536]
+       ↓ 2× ConvBlock (dilated) → [896, 1536]
+       ↓ Task heads: 5,313 outputs (profile + total)
+  </div>
+  <p><strong>Why it works:</strong> CNN stem captures local motifs; Transformer integrates distal enhancers (up to 100k bp away); multi-task across tracks shares representations. <strong>Limitation:</strong> Human reference only; no personal haplotype input.</p>
+</div>
+
+<div class="card">
+  <h2>Deep dive: Single-cell foundation models</h2>
+  <p>scRNA-seq: 10k–1M cells × 20k genes. Sparse, noisy, batch effects. Foundation models:</p>
+  <ul>
+    <li><strong>scVI / scANVI (2018–2021):</strong> VAE for batch correction + label transfer. Generative, not transformer.</li>
+    <li><strong>GeneFormer (2023):</strong> Transformer on rank-normalized gene expression; pre-train on 30M cells → fine-tune for disease classification, perturbation prediction.</li>
+    <li><strong>scGPT (2023):</strong> BERT-style masking on tokenized gene expression + gene embeddings; pre-train 10M cells.</li>
+    <li><strong>Universal Cell Embedding (UCE, 2024):</strong> Contrastive learning across 36M cells; zero-shot cell type annotation.</li>
+  </ul>
+  <p><strong>Emerging pattern:</strong> Pre-train on massive public atlases (Tabula Sapiens, Human Cell Atlas) → transfer to small disease cohorts.</p>
+</div>
+
+<div class="card">
+  <h2>Frontiers & open problems</h2>
+  <table>
+    <thead>
+      <tr><th>Frontier</th><th>Current gap</th><th>Promising direction</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Personal genomes</strong></td><td>Models use reference; your haplotype ≠ reference</td><td>Pangenome graphs (vg, minigraph) + graph neural nets</td></tr>
+      <tr><td><strong>Long-range / 3D genome</strong></td><td>Enformer sees 200k bp; loops span Mb</td><td>Hi-C + sequence joint modeling; diffusion on contact maps</td></tr>
+      <tr><td><strong>Multi-omics integration</strong></td><td>Separate models per modality</td><td>Multi-modal transformers (scJoint, MOFA+, totalVI)</td></tr>
+      <tr><td><strong>Causal interpretation</strong></td><td>Attribution ≠ mechanism</td><td>In silico mutagenesis + perturbation validation (CRISPR screens)</td></tr>
+      <tr><td><strong>Non-coding variants</strong></td><td>ClinVar is 95% coding</td><td>MPRA/STARR-seq data + unsupervised regulatory LMs</td></tr>
+      <tr><td><strong>Clinical deployment</strong></td><td>ACMG guidelines don't cover AI evidence</td><td>Prospective trials; FDA SaMD pathway; calibration standards</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="card">
+  <h2>Socratic check: question 3</h2>
+  <div class="socratic" data-question="unsupervised-variant">
+    <p><strong>Why do unsupervised protein language models (ESM, AlphaMissense) outperform supervised classifiers (CADD, PrimateAI) on variant effect prediction, even though the supervised models were trained directly on pathogenic/benign labels?</strong></p>
+  </div>
+</div>
+
+<script src="socratic.js" defer></script>
+<script>
+  window.SOCRATIC_KEY = {
+    "brief": "First-year bioinformatics students with CS background. Stress: supervised labels are noisy/sparse; evolutionary data is massive/dense; LMs learn fitness landscapes implicitly.",
+    "questions": {
+      "unsupervised-variant": {
+        "question": "Why do unsupervised protein language models (ESM, AlphaMissense) outperform supervised classifiers (CADD, PrimateAI) on variant effect prediction, even though the supervised models were trained directly on pathogenic/benign labels?",
+        "answer": "Three reasons: (1) Label noise & scarcity — ClinVar has ~100k labeled variants, many with conflicting submissions; pathogenic variants are extremely rare. Supervised models overfit to label artifacts. (2) Evolutionary scale — ESM/AlphaMissense see millions of natural sequences spanning billions of years of evolution; they learn the implicit fitness landscape (which mutations nature tolerates) without any human labels. (3) Structural grounding — AlphaMissense adds AlphaFold structural context, capturing biophysical constraints (stability, binding) that sequence-only models miss. Supervised models trained on ClinVar learn 'what submitters called pathogenic,' not 'what breaks protein function.'",
+        "misconceptions": [
+          "Supervised should win because it uses the 'right' labels — but ClinVar labels are noisy, biased toward well-studied genes, and circular (some submitters use CADD scores as evidence)",
+          "Unsupervised models don't know about disease — they know about evolutionary constraint, which is a stronger proxy for pathogenicity than noisy clinical labels",
+          "It's just more data — it's not volume alone; it's that evolutionary data is *self-consistent* (nature's selection) vs. human labels which are inconsistent"
+        ]
+      }
+    }
+  };
+</script>
+
+<footer>
+  <p><a href="ml-fundamentals.html">← ML Fundamentals</a> | <a href="index.html">Back to Introduction</a></p>
+</footer>
+</body>
+</html>

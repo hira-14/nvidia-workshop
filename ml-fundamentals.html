@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ML Fundamentals for Genomics — AI in Genomics</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: system-ui, -apple-system, sans-serif; line-height: 1.6; max-width: 900px; margin: 0 auto; padding: 2rem 1rem; color: #1a1a1a; }
+  h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+  .subtitle { font-size: 1.25rem; color: #444; margin-bottom: 2rem; }
+  nav { display: flex; gap: 1rem; margin: 2rem 0; flex-wrap: wrap; }
+  nav a { display: inline-block; padding: 0.75rem 1.5rem; background: #2563eb; color: white; text-decoration: none; border-radius: 6px; font-weight: 500; }
+  nav a:hover { background: #1d4ed8; }
+  nav a.current { background: #1e3a8a; }
+  .card { border: 1px solid #e5e7eb; border-radius: 8px; padding: 1.5rem; margin: 1rem 0; background: #fafafa; }
+  .card h2 { margin-top: 0; font-size: 1.25rem; }
+  .highlight { background: #fef3c7; border-color: #fde68a; }
+  .highlight h2 { color: #92400e; }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid #e5e7eb; color: #6b7280; font-size: 0.875rem; }
+  pre { background: #1e1e1e; color: #d4d4d4; padding: 1rem; border-radius: 6px; overflow-x: auto; }
+  code { font-family: ui-monospace, SFMono-Regular, monospace; }
+  .arch-diagram { font-family: monospace; white-space: pre; background: #f3f4f6; padding: 1rem; border-radius: 6px; overflow-x: auto; font-size: 0.875rem; }
+</style>
+</head>
+<body>
+<h1>ML Fundamentals for Genomics</h1>
+<p class="subtitle">Architectures, representations, and training strategies that work on biological sequences</p>
+
+<nav>
+  <a href="quick-start.html">0. Quick Start</a>
+  <a href="index.html">1. Introduction</a>
+  <a href="ml-fundamentals.html" class="current">2. ML Fundamentals</a>
+  <a href="applications.html">3. Applications</a>
+</nav>
+
+<div class="card">
+  <h2>The sequence representation problem</h2>
+  <p>Genomic sequences are variable-length strings over small alphabets (DNA: {A,C,G,T}, protein: 20 amino acids). Standard ML expects fixed-size tensors. Three dominant strategies:</p>
+  <table style="width:100%; border-collapse:collapse;">
+    <thead>
+      <tr style="text-align:left; border-bottom:2px solid #e5e7eb;">
+        <th style="padding:0.5rem;">Strategy</th>
+        <th style="padding:0.5rem;">How it works</th>
+        <th style="padding:0.5rem;">Used by</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom:1px solid #e5e7eb;"><td style="padding:0.5rem;"><strong>k-mer / tokenization</strong></td><td style="padding:0.5rem;">Slide window of length k, map each k-mer to an integer ID; pad/truncate to fixed length</td><td style="padding:0.5rem;">DNABERT, Nucleotide Transformer, HyenaDNA</td></tr>
+      <tr style="border-bottom:1px solid #e5e7eb;"><td style="padding:0.5rem;"><strong>Character-level (byte/char)</strong></td><td style="padding:0.5rem;">Each base = one token; sequence length = raw length; uses sub-quadratic attention (Hyena, Mamba, FlashAttention)</td><td style="padding:0.5rem;">HyenaDNA, Mamba, Caduceus</td></tr>
+      <tr style="border-bottom:1px solid #e5e7eb;"><td style="padding:0.5rem;"><strong>Fixed embeddings + pooling</strong></td><td style="padding:0.5rem;">Pre-trained embedding per k-mer/gene; aggregate (mean, attention) to fixed vector</td><td style="padding:0.5rem;">gene2vec, scBERT (cell-level), earlier CNN work</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="card">
+  <h2>Architecture families for sequence modeling</h2>
+
+  <h3>1. CNNs — Local motif detectors</h3>
+  <p>Convolutions scan for position-invariant patterns (TF binding sites, splice sites). Dilated convolutions expand receptive field exponentially.</p>
+  <div class="arch-diagram">
+Input: [L, 4] one-hot
+       ↓ Conv1d(k=15, dil=1) → ReLU
+       ↓ Conv1d(k=15, dil=2) → ReLU
+       ↓ Conv1d(k=15, dil=4) → ReLU  (receptive field = 15 + 14×(1+2+4) = 113 bp)
+       ↓ GlobalMaxPool → Dense → Task head
+  </div>
+  <p><strong>Strengths:</strong> Fast, interpretable filters → motifs. <strong>Limits:</strong> Fixed receptive field, weak long-range dependencies.</p>
+
+  <h3>2. Transformers — Global context via attention</h3>
+  <p>Self-attention relates every position to every other. Standard quadratic attention limits length (~4k–8k tokens). Genomics adaptations:</p>
+  <ul>
+    <li><strong>FlashAttention / xFormers:</strong> Exact attention, better memory, up to ~16k–32k</li>
+    <li><strong>Linear/Performer attention:</strong> Approximate O(L), used in Nucleotide Transformer (12k context)</li>
+    <li><strong>Hyena / Mamba (SSMs):</strong> Sub-quadratic, theoretically infinite context; HyenaDNA handles 1M bp</li>
+  </ul>
+
+  <h3>3. Hybrid CNN + Transformer</h3>
+  <p>CNN stem for local feature extraction → Transformer for global reasoning. Enformer (Nature 2021) predicts expression from 200k bp using this pattern.</p>
+</div>
+
+<div class="card highlight">
+  <h2>Self-supervised pre-training: the genomics unlock</h2>
+  <p>Labeled data (e.g., "this variant is pathogenic") is scarce. Unlabeled sequences (reference genomes, SRA reads) are abundant. Pre-training objectives:</p>
+  <ul>
+    <li><strong>Masked Language Modeling (MLM):</strong> Mask 15% of tokens, predict them (BERT-style). DNABERT, Nucleotide Transformer.</li>
+    <li><strong>Span masking / k-mer masking:</strong> Mask contiguous spans to force learning longer-range dependencies.</li>
+    <li><strong>Contrastive / ESM-style:</strong> Predict masked residues in proteins; for DNA, predict masked bases across species alignments.</li>
+    <li><strong>Next-token prediction (GPT-style):</strong> Autoregressive; used in HyenaDNA, GenomeLM.</li>
+  </ul>
+  <p><strong>Fine-tuning:</strong> Freeze backbone → train task head (linear probe) → optionally unfreeze last N layers. For small labeled sets (<1k), linear probe often beats full fine-tuning.</p>
+</div>
+
+<div class="card">
+  <h2>Evaluation pitfalls specific to genomics</h2>
+  <table style="width:100%; border-collapse:collapse;">
+    <thead>
+      <tr style="text-align:left; border-bottom:2px solid #e5e7eb;">
+        <th style="padding:0.5rem;">Pitfall</th>
+        <th style="padding:0.5rem;">Why it matters</th>
+        <th style="padding:0.5rem;">Fix</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom:1px solid #e5e7eb;"><td style="padding:0.5rem;"><strong>Sequence homology leakage</strong></td><td style="padding:0.5rem;">Train/test share evolutionary history → inflated accuracy</td><td style="padding:0.5rem;">Cluster at 30–50% identity; split by cluster, not random</td></tr>
+      <tr style="border-bottom:1px solid #e5e7eb;"><td style="padding:0.5rem;"><strong>Reference bias</strong></td><td style="padding:0.5rem;">Models overfit to reference allele; miss alt alleles</td><td style="padding:0.5rem;">Augment with alternate haplotypes; test on diverse genomes</td></tr>
+      <tr style="border-bottom:1px solid #e5e7eb;"><td style="padding:0.5rem;"><strong>Class imbalance (rare variants)</strong></td><td style="padding:0.5rem;">Pathogenic variants ≪ benign; accuracy misleading</td><td style="padding:0.5rem;">Use AUPRC, balanced accuracy, F1; not AUROC alone</td></tr>
+      <tr style="border-bottom:1px solid #e5e7eb;"><td style="padding:0.5rem;"><strong>Batch effects / population stratification</strong></td><td style="padding:0.5rem;">Technical artifacts correlate with labels</td><td style="padding:0.5rem;">Include covariates; adversarial debiasing; cross-cohort validation</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="card">
+  <h2>Socratic check: question 2</h2>
+  <div class="socratic" data-question="cnn-vs-transformer">
+    <p><strong>You have 500 labeled promoter sequences (200 bp each) to predict tissue-specific activity. Would you start with a CNN or a Transformer? Why?</strong></p>
+  </div>
+</div>
+
+<script src="socratic.js" defer></script>
+<script>
+  window.SOCRATIC_KEY = {
+    "brief": "First-year bioinformatics students with CS background. Stress: small data → inductive bias (CNN) wins; transformers need pre-training or large data.",
+    "questions": {
+      "cnn-vs-transformer": {
+        "question": "You have 500 labeled promoter sequences (200 bp each) to predict tissue-specific activity. Would you start with a CNN or a Transformer? Why?",
+        "answer": "Start with a CNN. With only 500 labeled examples, a CNN's strong inductive bias (translation invariance, local receptive fields matching TF binding motifs) will generalize better than a Transformer, which has minimal inductive bias and needs either massive labeled data or self-supervised pre-training on unlabeled sequences to avoid overfitting. A practical path: use a pre-trained DNABERT/Nucleotide Transformer as a frozen feature extractor + simple head, or train a shallow CNN from scratch. If you have access to unlabeled promoter sequences from the same species, pre-train a Transformer via MLM first, then fine-tune.",
+        "misconceptions": [
+          "Transformers are always better — they need data/pre-training to beat CNNs on small labeled sets",
+          "Just fine-tune a pre-trained Transformer — with 500 samples, even fine-tuning can overfit; linear probe on frozen backbone is safer",
+          "Sequence length 200 bp is too short for Transformers — false, they work fine at short lengths; the issue is data, not length"
+        ]
+      }
+    }
+  };
+</script>
+
+<footer>
+  <p><a href="index.html">← Introduction</a> | <a href="applications.html">Applications →</a></p>
+</footer>
+</body>
+</html>
